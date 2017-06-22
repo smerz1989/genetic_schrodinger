@@ -83,8 +83,11 @@
           
             
             
-                <!-- Local TOC -->
-                <div class="local-toc"></div>
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
             
           
         </div>
@@ -138,13 +141,13 @@
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="n">ProcessPoolExecutor</span>
 
-<div class="viewcode-block" id="initialize_nn"><a class="viewcode-back" href="../API.html#neural_schrodinger.initialize_nn">[docs]</a><span class="k">def</span> <span class="nf">initialize_nn</span><span class="p">():</span>
+<div class="viewcode-block" id="initialize_nn"><a class="viewcode-back" href="../api.html#neural_schrodinger.initialize_nn">[docs]</a><span class="k">def</span> <span class="nf">initialize_nn</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Initializes a neural network using PyBrain with 6 hidden layers, 1 input layerm and 2 output layers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">net</span> <span class="o">=</span> <span class="n">buildNetwork</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">hiddenclass</span><span class="o">=</span><span class="n">pys</span><span class="o">.</span><span class="n">SigmoidLayer</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">net</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_weights_by_layer"><a class="viewcode-back" href="../API.html#neural_schrodinger.get_weights_by_layer">[docs]</a><span class="k">def</span> <span class="nf">get_weights_by_layer</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">layername</span><span class="p">):</span>
+<div class="viewcode-block" id="get_weights_by_layer"><a class="viewcode-back" href="../api.html#neural_schrodinger.get_weights_by_layer">[docs]</a><span class="k">def</span> <span class="nf">get_weights_by_layer</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">layername</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the weights of the layer specified by layername of a PyBrain neural network net.</span>
 
 <span class="sd">    Parameters</span>
@@ -163,7 +166,7 @@
     <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">connection</span><span class="o">.</span><span class="n">params</span> <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="n">connections</span><span class="p">])</span>
     <span class="k">return</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="weights_to_binary"><a class="viewcode-back" href="../API.html#neural_schrodinger.weights_to_binary">[docs]</a><span class="k">def</span> <span class="nf">weights_to_binary</span><span class="p">(</span><span class="n">net</span><span class="p">):</span>
+<div class="viewcode-block" id="weights_to_binary"><a class="viewcode-back" href="../api.html#neural_schrodinger.weights_to_binary">[docs]</a><span class="k">def</span> <span class="nf">weights_to_binary</span><span class="p">(</span><span class="n">net</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts the weights of a PyBrain neural network to the binary encoding specified by float_to_bin.</span>
 
 <span class="sd">    Parameters</span>
@@ -179,7 +182,7 @@
     <span class="n">binary_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">float_to_bin</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">]</span>
     <span class="k">return</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">binary_list</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="get_random_gene"><a class="viewcode-back" href="../API.html#neural_schrodinger.get_random_gene">[docs]</a><span class="k">def</span> <span class="nf">get_random_gene</span><span class="p">(</span><span class="n">gene_length</span><span class="p">):</span>
+<div class="viewcode-block" id="get_random_gene"><a class="viewcode-back" href="../api.html#neural_schrodinger.get_random_gene">[docs]</a><span class="k">def</span> <span class="nf">get_random_gene</span><span class="p">(</span><span class="n">gene_length</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a random gene which corresponds to a random binary sequence of length specified by gene_length.</span>
 
 <span class="sd">    Parameters</span>
@@ -196,7 +199,7 @@
     <span class="n">gene</span> <span class="o">=</span> <span class="n">format_string</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rnd</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="n">gene_length</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">return</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="system_to_gene"><a class="viewcode-back" href="../API.html#neural_schrodinger.system_to_gene">[docs]</a><span class="k">def</span> <span class="nf">system_to_gene</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">energy</span><span class="p">):</span>
+<div class="viewcode-block" id="system_to_gene"><a class="viewcode-back" href="../api.html#neural_schrodinger.system_to_gene">[docs]</a><span class="k">def</span> <span class="nf">system_to_gene</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">energy</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts a system specified by the given PyBrain neural network and energy to a binary encoding specified by float_to_bin.</span>
 
 <span class="sd">    Parameters</span>
@@ -216,7 +219,7 @@
     <span class="n">binary_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">float_to_bin</span><span class="p">(</span><span class="n">energy</span><span class="p">))</span>
     <span class="k">return</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">binary_list</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="gene_to_system"><a class="viewcode-back" href="../API.html#neural_schrodinger.gene_to_system">[docs]</a><span class="k">def</span> <span class="nf">gene_to_system</span><span class="p">(</span><span class="n">gene</span><span class="p">):</span>
+<div class="viewcode-block" id="gene_to_system"><a class="viewcode-back" href="../api.html#neural_schrodinger.gene_to_system">[docs]</a><span class="k">def</span> <span class="nf">gene_to_system</span><span class="p">(</span><span class="n">gene</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts a gene to a system which corresponds to a set of neural network weights and an energy.</span>
 
 <span class="sd">    Parameters</span>
@@ -238,7 +241,7 @@
     <span class="n">energy</span> <span class="o">=</span> <span class="n">bin_to_float</span><span class="p">(</span><span class="n">subgenes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span><span class="p">((</span><span class="n">weights</span><span class="p">,</span><span class="n">energy</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="natural_selection"><a class="viewcode-back" href="../API.html#neural_schrodinger.natural_selection">[docs]</a><span class="k">def</span> <span class="nf">natural_selection</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span><span class="n">net</span><span class="p">,</span><span class="n">num_survivors</span><span class="p">,</span><span class="n">points</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
+<div class="viewcode-block" id="natural_selection"><a class="viewcode-back" href="../api.html#neural_schrodinger.natural_selection">[docs]</a><span class="k">def</span> <span class="nf">natural_selection</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span><span class="n">net</span><span class="p">,</span><span class="n">num_survivors</span><span class="p">,</span><span class="n">points</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Applies &quot;natural selection&quot; to a list of genes using the tournament methodology.  </span>
 <span class="sd">    In this methodology genes are pitted against each other in pairs and the gene with the greatest fitness wins.</span>
 <span class="sd">    This continues until the specified amount of genes are obtained.</span>
@@ -275,7 +278,7 @@
         <span class="n">survivor_fitnesses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">fitnesses</span><span class="p">[</span><span class="n">selected_gene</span><span class="p">]</span>
     <span class="k">return</span><span class="p">((</span><span class="n">survivors</span><span class="p">,</span><span class="n">survivor_fitnesses</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="breed_genes"><a class="viewcode-back" href="../API.html#neural_schrodinger.breed_genes">[docs]</a><span class="k">def</span> <span class="nf">breed_genes</span><span class="p">(</span><span class="n">gene1</span><span class="p">,</span><span class="n">gene2</span><span class="p">):</span>
+<div class="viewcode-block" id="breed_genes"><a class="viewcode-back" href="../api.html#neural_schrodinger.breed_genes">[docs]</a><span class="k">def</span> <span class="nf">breed_genes</span><span class="p">(</span><span class="n">gene1</span><span class="p">,</span><span class="n">gene2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mates two genes using the uniform crossover algorithm.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -298,7 +301,7 @@
             <span class="n">newgene</span><span class="o">+=</span><span class="n">gene2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">newgene</span></div>
 
-<div class="viewcode-block" id="nn_array"><a class="viewcode-back" href="../API.html#neural_schrodinger.nn_array">[docs]</a><span class="k">def</span> <span class="nf">nn_array</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">array</span><span class="p">):</span>
+<div class="viewcode-block" id="nn_array"><a class="viewcode-back" href="../api.html#neural_schrodinger.nn_array">[docs]</a><span class="k">def</span> <span class="nf">nn_array</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Apply the neural network over an array.</span>
 
 <span class="sd">    Parameters</span>
@@ -316,7 +319,7 @@
     <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">array</span><span class="p">]</span>
     <span class="k">return</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">activate</span><span class="p">,</span><span class="n">vector</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="nn_first_derivative"><a class="viewcode-back" href="../API.html#neural_schrodinger.nn_first_derivative">[docs]</a><span class="k">def</span> <span class="nf">nn_first_derivative</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="nn_first_derivative"><a class="viewcode-back" href="../api.html#neural_schrodinger.nn_first_derivative">[docs]</a><span class="k">def</span> <span class="nf">nn_first_derivative</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The first derivative of a feedforward neural network with one hidden sigmoid layer.</span>
 
 <span class="sd">    Parameters</span>
@@ -340,7 +343,7 @@
     <span class="k">return</span><span class="p">(</span><span class="n">output1_deriv</span><span class="p">,</span><span class="n">output2_deriv</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="nn_second_derivative"><a class="viewcode-back" href="../API.html#neural_schrodinger.nn_second_derivative">[docs]</a><span class="k">def</span> <span class="nf">nn_second_derivative</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="nn_second_derivative"><a class="viewcode-back" href="../api.html#neural_schrodinger.nn_second_derivative">[docs]</a><span class="k">def</span> <span class="nf">nn_second_derivative</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The second derivative of a feedforward neural network with one hidden sigmoid layer.</span>
 
 <span class="sd">    Parameters</span>
@@ -363,7 +366,7 @@
     <span class="n">output2_deriv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">iterable2</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
     <span class="k">return</span><span class="p">(</span><span class="n">output1_deriv</span><span class="p">,</span><span class="n">output2_deriv</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="eigenfunction"><a class="viewcode-back" href="../API.html#neural_schrodinger.eigenfunction">[docs]</a><span class="k">def</span> <span class="nf">eigenfunction</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="eigenfunction"><a class="viewcode-back" href="../api.html#neural_schrodinger.eigenfunction">[docs]</a><span class="k">def</span> <span class="nf">eigenfunction</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts the two outputs of the neural network to the value of the wavefunction at x.</span>
 
 <span class="sd">    Parameters</span>
@@ -381,7 +384,7 @@
     <span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">S</span><span class="p">)</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">]))</span>
     <span class="k">return</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">S</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="eigenfunction_second_deriv"><a class="viewcode-back" href="../API.html#neural_schrodinger.eigenfunction_second_deriv">[docs]</a><span class="k">def</span> <span class="nf">eigenfunction_second_deriv</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="eigenfunction_second_deriv"><a class="viewcode-back" href="../api.html#neural_schrodinger.eigenfunction_second_deriv">[docs]</a><span class="k">def</span> <span class="nf">eigenfunction_second_deriv</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the second derivative of the wavefunction represented by net.</span>
 
 <span class="sd">    Parameters</span>
@@ -399,7 +402,7 @@
                     <span class="n">A</span><span class="o">*</span><span class="n">Sprime</span><span class="o">*</span><span class="n">Sprime</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
     <span class="k">return</span><span class="p">(</span><span class="n">second_deriv</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="hamiltonian"><a class="viewcode-back" href="../API.html#neural_schrodinger.hamiltonian">[docs]</a><span class="k">def</span> <span class="nf">hamiltonian</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
+<div class="viewcode-block" id="hamiltonian"><a class="viewcode-back" href="../api.html#neural_schrodinger.hamiltonian">[docs]</a><span class="k">def</span> <span class="nf">hamiltonian</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the hamiltonian of a harmonic oscillator of reduced mass &quot;mass&quot; applied to the wavefunction represented by net.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -419,7 +422,7 @@
     <span class="n">hamiltonian</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">mass</span><span class="p">))</span><span class="o">*</span><span class="n">eigenfunction_second_deriv</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">eigenfunction</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_random_points"><a class="viewcode-back" href="../API.html#neural_schrodinger.get_random_points">[docs]</a><span class="k">def</span> <span class="nf">get_random_points</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">M</span><span class="p">):</span>
+<div class="viewcode-block" id="get_random_points"><a class="viewcode-back" href="../api.html#neural_schrodinger.get_random_points">[docs]</a><span class="k">def</span> <span class="nf">get_random_points</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">M</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Gets n random points between xmin and xmax used for the random point evaluation method.</span>
 
 <span class="sd">    Parameters</span>
@@ -438,7 +441,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">M</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="gene_fitness"><a class="viewcode-back" href="../API.html#neural_schrodinger.gene_fitness">[docs]</a><span class="k">def</span> <span class="nf">gene_fitness</span><span class="p">(</span><span class="n">gene</span><span class="p">,</span><span class="n">net</span><span class="p">,</span><span class="n">points</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
+<div class="viewcode-block" id="gene_fitness"><a class="viewcode-back" href="../api.html#neural_schrodinger.gene_fitness">[docs]</a><span class="k">def</span> <span class="nf">gene_fitness</span><span class="p">(</span><span class="n">gene</span><span class="p">,</span><span class="n">net</span><span class="p">,</span><span class="n">points</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the fitness of the gene based on the difference between the energy and </span>
 <span class="sd">    the hamiltonian applied to the wavefunction squared evaluated at the points specified by points.</span>
 
@@ -468,7 +471,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">R</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="bin_to_float"><a class="viewcode-back" href="../API.html#neural_schrodinger.bin_to_float">[docs]</a><span class="k">def</span> <span class="nf">bin_to_float</span><span class="p">(</span><span class="n">binary</span><span class="p">):</span>
+<div class="viewcode-block" id="bin_to_float"><a class="viewcode-back" href="../api.html#neural_schrodinger.bin_to_float">[docs]</a><span class="k">def</span> <span class="nf">bin_to_float</span><span class="p">(</span><span class="n">binary</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts a binary number encoded with fixed point format.  Here the first digit is reserved for sign and the rest are binary places starting with 2^1 and decreasing.</span>
 <span class="sd">    Here we use ten bits to encode a number.</span>
 
@@ -486,7 +489,7 @@
     <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">binary</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">==</span><span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="n">number</span>
     <span class="k">return</span> <span class="n">number</span></div>
 
-<div class="viewcode-block" id="float_to_bin"><a class="viewcode-back" href="../API.html#neural_schrodinger.float_to_bin">[docs]</a><span class="k">def</span> <span class="nf">float_to_bin</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+<div class="viewcode-block" id="float_to_bin"><a class="viewcode-back" href="../api.html#neural_schrodinger.float_to_bin">[docs]</a><span class="k">def</span> <span class="nf">float_to_bin</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts a floating point number to a ten bit fixed point format as specified in bin_to_float.</span>
 
 <span class="sd">    Parameters</span>
