@@ -9,31 +9,96 @@ import functools
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 def initialize_nn():
+    """Initializes a neural network using PyBrain with 6 hidden layers, 1 input layerm and 2 output layers.
+    """
     net = buildNetwork(1,6,2,hiddenclass=pys.SigmoidLayer)
     return(net)
 
 def get_weights_by_layer(net, layername):
+    """Get the weights of the layer specified by layername of a PyBrain neural network net.
+
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+        A feed forward neural network created using PyBrain
+    layername : string
+        A string specifying the name of the layer that one wishes to get the weights of.
+
+    Returns
+    -------
+    weights : numpy array of floats
+        A Numpy array of floats containing the weights of the specified layer.
+    """
     connections = net.connections[net[layername]]
     weights = np.concatenate([connection.params for connection in connections])
     return(weights)
 
 def weights_to_binary(net):
+    """Converts the weights of a PyBrain neural network to the binary encoding specified by float_to_bin.
+
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+
+    Returns
+    -------
+    gene : string
+        A string that corresponds to the binary encoding of the neural network which corresponds to the binary encoding of the neural network weights.
+    """
     weights = net.params
     binary_list = [float_to_bin(weight) for weight in weights]
     return("".join(binary_list))
 
 def get_random_gene(gene_length):
+    """Returns a random gene which corresponds to a random binary sequence of length specified by gene_length.
+
+    Parameters
+    ----------
+    gene_length : int
+        Length og the random gene to generate
+
+    Returns
+    -------
+    gene : string
+        A string representing a random gene of length gene_length
+    """
     format_string =  "{:0"+str(gene_length)+"b}"
     gene = format_string.format(rnd.randint(0,2**gene_length-1))
     return(gene)
 
 def system_to_gene(net,energy):
+    """Converts a system specified by the given PyBrain neural network and energy to a binary encoding specified by float_to_bin.
+
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+        A PyBrain neural network that corresponds to the wavefunction guess
+    energy : float
+        The guessed energy that corresponds to the given neural network
+
+    Returns
+    -------
+    string
+        A string which specifies the binary encoding of the given system.
+    """
     weights = net.params
     binary_list = [float_to_bin(weight) for weight in weights]
     binary_list.append(float_to_bin(energy))
     return("".join(binary_list))
 
 def gene_to_system(gene):
+    """Converts a gene to a system which corresponds to a set of neural network weights and an energy.
+
+    Parameters
+    ----------
+    gene : string
+        A string representing the binary encoding of the system
+
+    Returns
+    -------
+    weights,energy : (float list,float)
+        A tuple containing the weights and energy of the system.
+    """
     num_length = 10
     array = np.fromstring(gene,dtype=np.dtype('S1'))
     split_array = np.split(array,27) 
@@ -44,6 +109,28 @@ def gene_to_system(gene):
     return((weights,energy))
 
 def natural_selection(genes,net,num_survivors,points,mass):
+    """Applies "natural selection" to a list of genes using the tournament methodology.  
+    In this methodology genes are pitted against each other in pairs and the gene with the greatest fitness wins.
+    This continues until the specified amount of genes are obtained.
+
+    Parameters
+    ----------
+    genes : list of strings
+        A list of strings each of which corresponds to a gene.
+    net : PyBrain FeedForwardNetwork
+        The neural network used to approximate the wavefunction
+    num_survivors : int
+        The number of survivors that are desired to be left.
+    points : array of floats
+        A set of points one wishes to evaluate the genes fitness on. 
+    mass : float
+        The reduced mass used in the Schrodinger equation to evaluate fitness.
+
+    Returns
+    -------
+    survivors, survivor_fitnesses : (list of strings, list of floats)
+        A list of survivor genes and their associated fitnesses.
+    """
     survivors = np.zeros(num_survivors,dtype=np.dtype('S270'))
     survivor_fitnesses = np.zeros(num_survivors)
     fitness_func = functools.partial(gene_fitness,net=net,points=points,mass=mass)

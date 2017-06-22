@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>&lt;no title&gt; &mdash; Genetic Schrodinger 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Genetic Schrodinger 1.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Genetic Schrodinger
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul class="simple">
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Genetic Schrodinger</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>&lt;no title&gt;</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/API.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-neural_schrodinger"></span><dl class="function">
+<dt id="neural_schrodinger.gene_to_system">
+<code class="descclassname">neural_schrodinger.</code><code class="descname">gene_to_system</code><span class="sig-paren">(</span><em>gene</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neural_schrodinger.html#gene_to_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neural_schrodinger.gene_to_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a gene to a system which corresponds to a set of neural network weights and an energy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>gene</strong> : string</p>
+<blockquote>
+<div><p>A string representing the binary encoding of the system</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>weights,energy</strong> : (float list,float)</p>
+<blockquote class="last">
+<div><p>A tuple containing the weights and energy of the system.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="neural_schrodinger.get_random_gene">
+<code class="descclassname">neural_schrodinger.</code><code class="descname">get_random_gene</code><span class="sig-paren">(</span><em>gene_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neural_schrodinger.html#get_random_gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neural_schrodinger.get_random_gene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a random gene which corresponds to a random binary sequence of length specified by gene_length.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>gene_length</strong> : int</p>
+<blockquote>
+<div><p>Length og the random gene to generate</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>gene</strong> : string</p>
+<blockquote class="last">
+<div><p>A string representing a random gene of length gene_length</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="neural_schrodinger.get_weights_by_layer">
+<code class="descclassname">neural_schrodinger.</code><code class="descname">get_weights_by_layer</code><span class="sig-paren">(</span><em>net</em>, <em>layername</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neural_schrodinger.html#get_weights_by_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neural_schrodinger.get_weights_by_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the weights of the layer specified by layername of a PyBrain neural network net.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>net</strong> : PyBrain FeedForwardNetwork</p>
+<blockquote>
+<div><p>A feed forward neural network created using PyBrain</p>
+</div></blockquote>
+<p><strong>layername</strong> : string</p>
+<blockquote>
+<div><p>A string specifying the name of the layer that one wishes to get the weights of.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>weights</strong> : numpy array of floats</p>
+<blockquote class="last">
+<div><p>A Numpy array of floats containing the weights of the specified layer.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="neural_schrodinger.initialize_nn">
+<code class="descclassname">neural_schrodinger.</code><code class="descname">initialize_nn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neural_schrodinger.html#initialize_nn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neural_schrodinger.initialize_nn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a neural network using PyBrain with 6 hidden layers, 1 input layerm and 2 output layers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="neural_schrodinger.natural_selection">
+<code class="descclassname">neural_schrodinger.</code><code class="descname">natural_selection</code><span class="sig-paren">(</span><em>genes</em>, <em>net</em>, <em>num_survivors</em>, <em>points</em>, <em>mass</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neural_schrodinger.html#natural_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neural_schrodinger.natural_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies &#8220;natural selection&#8221; to a list of genes using the tournament methodology.  
+In this methodology genes are pitted against each other in pairs and the gene with the greatest fitness wins.
+This continues until the specified amount of genes are obtained.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>genes</strong> : list of strings</p>
+<blockquote>
+<div><p>A list of strings each of which corresponds to a gene.</p>
+</div></blockquote>
+<p><strong>net</strong> : PyBrain FeedForwardNetwork</p>
+<blockquote>
+<div><p>The neural network used to approximate the wavefunction</p>
+</div></blockquote>
+<p><strong>num_survivors</strong> : int</p>
+<blockquote>
+<div><p>The number of survivors that are desired to be left.</p>
+</div></blockquote>
+<p><strong>points</strong> : array of floats</p>
+<blockquote>
+<div><p>A set of points one wishes to evaluate the genes fitness on.</p>
+</div></blockquote>
+<p><strong>mass</strong> : float</p>
+<blockquote>
+<div><p>The reduced mass used in the Schrodinger equation to evaluate fitness.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>survivors, survivor_fitnesses</strong> : (list of strings, list of floats)</p>
+<blockquote class="last">
+<div><p>A list of survivor genes and their associated fitnesses.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="neural_schrodinger.system_to_gene">
+<code class="descclassname">neural_schrodinger.</code><code class="descname">system_to_gene</code><span class="sig-paren">(</span><em>net</em>, <em>energy</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neural_schrodinger.html#system_to_gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neural_schrodinger.system_to_gene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a system specified by the given PyBrain neural network and energy to a binary encoding specified by float_to_bin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>net</strong> : PyBrain FeedForwardNetwork</p>
+<blockquote>
+<div><p>A PyBrain neural network that corresponds to the wavefunction guess</p>
+</div></blockquote>
+<p><strong>energy</strong> : float</p>
+<blockquote>
+<div><p>The guessed energy that corresponds to the given neural network</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">string</p>
+<blockquote class="last">
+<div><p>A string which specifies the binary encoding of the given system.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="neural_schrodinger.weights_to_binary">
+<code class="descclassname">neural_schrodinger.</code><code class="descname">weights_to_binary</code><span class="sig-paren">(</span><em>net</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neural_schrodinger.html#weights_to_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neural_schrodinger.weights_to_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the weights of a PyBrain neural network to the binary encoding specified by float_to_bin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>net</strong> : PyBrain FeedForwardNetwork</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>gene</strong> : string</p>
+<blockquote class="last">
+<div><p>A string that corresponds to the binary encoding of the neural network which corresponds to the binary encoding of the neural network weights.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Steve Merz.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>neural_schrodinger &mdash; Genetic Schrodinger 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Genetic Schrodinger 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Genetic Schrodinger
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Genetic Schrodinger</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      
+    <li>neural_schrodinger</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for neural_schrodinger</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pybrain.structure</span> <span class="k">as</span> <span class="nn">pys</span>
+<span class="kn">from</span> <span class="nn">pybrain.tools.shortcuts</span> <span class="k">import</span> <span class="n">buildNetwork</span>
+<span class="kn">from</span> <span class="nn">pybrain.tools.functions</span> <span class="k">import</span> <span class="n">sigmoidPrime</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span><span class="n">cos</span><span class="p">,</span><span class="n">exp</span>
+<span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rnd</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">Pool</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="n">ProcessPoolExecutor</span>
+
+<div class="viewcode-block" id="initialize_nn"><a class="viewcode-back" href="../API.html#neural_schrodinger.initialize_nn">[docs]</a><span class="k">def</span> <span class="nf">initialize_nn</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Initializes a neural network using PyBrain with 6 hidden layers, 1 input layerm and 2 output layers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">buildNetwork</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">hiddenclass</span><span class="o">=</span><span class="n">pys</span><span class="o">.</span><span class="n">SigmoidLayer</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">net</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_weights_by_layer"><a class="viewcode-back" href="../API.html#neural_schrodinger.get_weights_by_layer">[docs]</a><span class="k">def</span> <span class="nf">get_weights_by_layer</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">layername</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the weights of the layer specified by layername of a PyBrain neural network net.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    net : PyBrain FeedForwardNetwork</span>
+<span class="sd">        A feed forward neural network created using PyBrain</span>
+<span class="sd">    layername : string</span>
+<span class="sd">        A string specifying the name of the layer that one wishes to get the weights of.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    weights : numpy array of floats</span>
+<span class="sd">        A Numpy array of floats containing the weights of the specified layer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connections</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">net</span><span class="p">[</span><span class="n">layername</span><span class="p">]]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">connection</span><span class="o">.</span><span class="n">params</span> <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="n">connections</span><span class="p">])</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="weights_to_binary"><a class="viewcode-back" href="../API.html#neural_schrodinger.weights_to_binary">[docs]</a><span class="k">def</span> <span class="nf">weights_to_binary</span><span class="p">(</span><span class="n">net</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts the weights of a PyBrain neural network to the binary encoding specified by float_to_bin.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    net : PyBrain FeedForwardNetwork</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    gene : string</span>
+<span class="sd">        A string that corresponds to the binary encoding of the neural network which corresponds to the binary encoding of the neural network weights.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">params</span>
+    <span class="n">binary_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">float_to_bin</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">]</span>
+    <span class="k">return</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">binary_list</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="get_random_gene"><a class="viewcode-back" href="../API.html#neural_schrodinger.get_random_gene">[docs]</a><span class="k">def</span> <span class="nf">get_random_gene</span><span class="p">(</span><span class="n">gene_length</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a random gene which corresponds to a random binary sequence of length specified by gene_length.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gene_length : int</span>
+<span class="sd">        Length og the random gene to generate</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    gene : string</span>
+<span class="sd">        A string representing a random gene of length gene_length</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">format_string</span> <span class="o">=</span>  <span class="s2">&quot;{:0&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">gene_length</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;b}&quot;</span>
+    <span class="n">gene</span> <span class="o">=</span> <span class="n">format_string</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rnd</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="n">gene_length</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="system_to_gene"><a class="viewcode-back" href="../API.html#neural_schrodinger.system_to_gene">[docs]</a><span class="k">def</span> <span class="nf">system_to_gene</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">energy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts a system specified by the given PyBrain neural network and energy to a binary encoding specified by float_to_bin.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    net : PyBrain FeedForwardNetwork</span>
+<span class="sd">        A PyBrain neural network that corresponds to the wavefunction guess</span>
+<span class="sd">    energy : float</span>
+<span class="sd">        The guessed energy that corresponds to the given neural network</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    string</span>
+<span class="sd">        A string which specifies the binary encoding of the given system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">params</span>
+    <span class="n">binary_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">float_to_bin</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">]</span>
+    <span class="n">binary_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">float_to_bin</span><span class="p">(</span><span class="n">energy</span><span class="p">))</span>
+    <span class="k">return</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">binary_list</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="gene_to_system"><a class="viewcode-back" href="../API.html#neural_schrodinger.gene_to_system">[docs]</a><span class="k">def</span> <span class="nf">gene_to_system</span><span class="p">(</span><span class="n">gene</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts a gene to a system which corresponds to a set of neural network weights and an energy.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gene : string</span>
+<span class="sd">        A string representing the binary encoding of the system</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    weights,energy : (float list,float)</span>
+<span class="sd">        A tuple containing the weights and energy of the system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_length</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">gene</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;S1&#39;</span><span class="p">))</span>
+    <span class="n">split_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="mi">27</span><span class="p">)</span> 
+    <span class="n">iterable</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subgene</span><span class="p">)</span> <span class="k">for</span> <span class="n">subgene</span> <span class="ow">in</span> <span class="n">split_array</span><span class="p">)</span>
+    <span class="n">subgenes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;S10&#39;</span><span class="p">))</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">bin_to_float</span><span class="p">,</span><span class="n">subgenes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">bin_to_float</span><span class="p">(</span><span class="n">subgenes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span><span class="p">((</span><span class="n">weights</span><span class="p">,</span><span class="n">energy</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="natural_selection"><a class="viewcode-back" href="../API.html#neural_schrodinger.natural_selection">[docs]</a><span class="k">def</span> <span class="nf">natural_selection</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span><span class="n">net</span><span class="p">,</span><span class="n">num_survivors</span><span class="p">,</span><span class="n">points</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Applies &quot;natural selection&quot; to a list of genes using the tournament methodology.  </span>
+<span class="sd">    In this methodology genes are pitted against each other in pairs and the gene with the greatest fitness wins.</span>
+<span class="sd">    This continues until the specified amount of genes are obtained.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    genes : list of strings</span>
+<span class="sd">        A list of strings each of which corresponds to a gene.</span>
+<span class="sd">    net : PyBrain FeedForwardNetwork</span>
+<span class="sd">        The neural network used to approximate the wavefunction</span>
+<span class="sd">    num_survivors : int</span>
+<span class="sd">        The number of survivors that are desired to be left.</span>
+<span class="sd">    points : array of floats</span>
+<span class="sd">        A set of points one wishes to evaluate the genes fitness on. </span>
+<span class="sd">    mass : float</span>
+<span class="sd">        The reduced mass used in the Schrodinger equation to evaluate fitness.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    survivors, survivor_fitnesses : (list of strings, list of floats)</span>
+<span class="sd">        A list of survivor genes and their associated fitnesses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">survivors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_survivors</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;S270&#39;</span><span class="p">))</span>
+    <span class="n">survivor_fitnesses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_survivors</span><span class="p">)</span>
+    <span class="n">fitness_func</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">gene_fitness</span><span class="p">,</span><span class="n">net</span><span class="o">=</span><span class="n">net</span><span class="p">,</span><span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span><span class="n">mass</span><span class="o">=</span><span class="n">mass</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fitness_func</span><span class="p">,</span><span class="n">genes</span><span class="p">)</span>
+    <span class="n">fitnesses</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_survivors</span><span class="p">):</span>
+        <span class="n">gene1</span><span class="p">,</span><span class="n">gene2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">genes</span><span class="p">)),</span><span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1">#fitness1,fitness2 = gene_fitness(gene1,net,points,mass), gene_fitness(gene2,net,points,mass)</span>
+        <span class="n">selected_gene</span> <span class="o">=</span> <span class="n">gene1</span> <span class="k">if</span> <span class="n">fitnesses</span><span class="p">[</span><span class="n">gene1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">fitnesses</span><span class="p">[</span><span class="n">gene2</span><span class="p">]</span> <span class="k">else</span> <span class="n">gene2</span>
+        <span class="n">survivors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">genes</span><span class="p">[</span><span class="n">selected_gene</span><span class="p">]</span>
+        <span class="n">survivor_fitnesses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">fitnesses</span><span class="p">[</span><span class="n">selected_gene</span><span class="p">]</span>
+    <span class="k">return</span><span class="p">((</span><span class="n">survivors</span><span class="p">,</span><span class="n">survivor_fitnesses</span><span class="p">))</span></div>
+
+<span class="k">def</span> <span class="nf">breed_genes</span><span class="p">(</span><span class="n">gene1</span><span class="p">,</span><span class="n">gene2</span><span class="p">):</span>
+    <span class="n">newgene</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gene1</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">rnd</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;</span><span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">newgene</span><span class="o">+=</span><span class="n">gene1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">newgene</span><span class="o">+=</span><span class="n">gene2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">newgene</span>
+
+<span class="k">def</span> <span class="nf">nn_array</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">array</span><span class="p">):</span>
+    <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">array</span><span class="p">]</span>
+    <span class="k">return</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">activate</span><span class="p">,</span><span class="n">vector</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">nn_first_derivative</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">inweights</span> <span class="o">=</span> <span class="n">get_weights_by_layer</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
+    <span class="n">hiddenweights</span> <span class="o">=</span> <span class="n">get_weights_by_layer</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="s1">&#39;hidden0&#39;</span><span class="p">)</span>
+    <span class="n">iterable1</span> <span class="o">=</span> <span class="p">(</span><span class="n">hiddenweight</span><span class="o">*</span><span class="n">sigmoidPrime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">inweight</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="p">(</span><span class="n">inweight</span><span class="p">,</span><span class="n">hiddenweight</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inweights</span><span class="p">,</span><span class="n">hiddenweights</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]))</span>
+    <span class="n">iterable2</span> <span class="o">=</span> <span class="p">(</span><span class="n">hiddenweight</span><span class="o">*</span><span class="n">sigmoidPrime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">inweight</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="p">(</span><span class="n">inweight</span><span class="p">,</span><span class="n">hiddenweight</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inweights</span><span class="p">,</span><span class="n">hiddenweights</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">12</span><span class="p">]))</span>
+    <span class="n">output1_deriv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">iterable1</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">output2_deriv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">iterable2</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">output1_deriv</span><span class="p">,</span><span class="n">output2_deriv</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">nn_second_derivative</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">inweights</span> <span class="o">=</span> <span class="n">get_weights_by_layer</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
+    <span class="n">hiddenweights</span> <span class="o">=</span> <span class="n">get_weights_by_layer</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="s1">&#39;hidden0&#39;</span><span class="p">)</span>
+    <span class="n">iterable1</span> <span class="o">=</span> <span class="p">(</span><span class="n">hiddenweight</span><span class="o">*</span><span class="n">sigmoidPrime</span><span class="p">(</span><span class="n">sigmoidPrime</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">*</span><span class="n">inweight</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="p">(</span><span class="n">inweight</span><span class="p">,</span><span class="n">hiddenweight</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inweights</span><span class="p">,</span><span class="n">hiddenweights</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]))</span>
+    <span class="n">iterable2</span> <span class="o">=</span> <span class="p">(</span><span class="n">hiddenweight</span><span class="o">*</span><span class="n">sigmoidPrime</span><span class="p">(</span><span class="n">sigmoidPrime</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">*</span><span class="n">inweight</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="p">(</span><span class="n">inweight</span><span class="p">,</span><span class="n">hiddenweight</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inweights</span><span class="p">,</span><span class="n">hiddenweights</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">12</span><span class="p">]))</span>
+    <span class="n">output1_deriv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">iterable1</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">output2_deriv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">iterable2</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">output1_deriv</span><span class="p">,</span><span class="n">output2_deriv</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">eigenfunction</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">S</span><span class="p">)</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">]))</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">eigenfunction_second_deriv</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">Aprime</span><span class="p">,</span><span class="n">Sprime</span><span class="p">)</span> <span class="o">=</span> <span class="n">nn_first_derivative</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">Aprime2</span><span class="p">,</span><span class="n">Sprime2</span><span class="p">)</span> <span class="o">=</span> <span class="n">nn_second_derivative</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">S</span><span class="p">)</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">]))</span>
+    <span class="n">second_deriv</span> <span class="o">=</span> <span class="p">(</span><span class="n">Aprime2</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">S</span><span class="p">)</span><span class="o">+</span><span class="n">Aprime</span><span class="o">*</span><span class="n">Sprime</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">S</span><span class="p">)</span><span class="o">+</span>
+                    <span class="p">(</span><span class="n">Aprime</span><span class="o">*</span><span class="n">Sprime</span><span class="o">+</span><span class="n">A</span><span class="o">*</span><span class="n">Sprime2</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">S</span><span class="p">)</span><span class="o">-</span>
+                    <span class="n">A</span><span class="o">*</span><span class="n">Sprime</span><span class="o">*</span><span class="n">Sprime</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">second_deriv</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">hamiltonian</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
+    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">mass</span><span class="p">))</span><span class="o">*</span><span class="n">eigenfunction_second_deriv</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">eigenfunction</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_random_points</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">M</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">M</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">gene_fitness</span><span class="p">(</span><span class="n">gene</span><span class="p">,</span><span class="n">net</span><span class="p">,</span><span class="n">points</span><span class="p">,</span><span class="n">mass</span><span class="p">):</span>
+    <span class="n">weights</span><span class="p">,</span><span class="n">energy</span> <span class="o">=</span> <span class="n">gene_to_system</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">_setParameters</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="n">energy_SSR_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="p">(</span><span class="n">hamiltonian</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">mass</span><span class="p">)</span><span class="o">-</span><span class="n">energy</span><span class="o">*</span><span class="n">eigenfunction</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">normalization_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">eigenfunction</span><span class="p">(</span><span class="n">net</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">((</span><span class="n">energy_SSR_func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">points</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">((</span><span class="n">normalization_func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">points</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">numerator</span><span class="o">/</span><span class="n">denominator</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">R</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">bin_to_float</span><span class="p">(</span><span class="n">binary</span><span class="p">):</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">digit</span><span class="p">)</span><span class="o">*</span><span class="mf">2.</span><span class="o">**</span><span class="p">(</span><span class="n">place</span><span class="p">)</span> <span class="k">for</span> <span class="n">digit</span><span class="p">,</span><span class="n">place</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">binary</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">==</span><span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="n">number</span>
+    <span class="k">return</span> <span class="n">number</span>
+
+<span class="k">def</span> <span class="nf">float_to_bin</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">number</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;0&quot;</span><span class="o">*</span><span class="mi">10</span>
+    <span class="n">wrapped_value</span> <span class="o">=</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">8</span>
+    <span class="n">binary</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span> <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;=</span><span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;1&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">wrapped_value</span><span class="o">&gt;=</span><span class="p">(</span><span class="mf">2.</span><span class="o">**</span><span class="n">i</span><span class="p">):</span>
+            <span class="n">wrapped_value</span><span class="o">-=</span><span class="p">(</span><span class="mf">2.</span><span class="o">**</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">binary</span><span class="o">+=</span><span class="s2">&quot;1&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">binary</span><span class="o">+=</span><span class="s2">&quot;0&quot;</span>
+    <span class="k">return</span> <span class="n">binary</span>
+    <span class="c1">#hexvalue,sign = (float.hex(number),0) if number&gt;0 else (float.hex(number)[1:],1)</span>
+    <span class="c1">#mantissa, exp = int(hexvalue[4:6],16), int(hexvalue[18:])</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def float_to_bin(number):</span>
+<span class="sd">    &quot;&quot;Modified from stackoverflow: https://stackoverflow.com/a/39378244&quot;&quot;</span>
+<span class="sd">    if number==0:</span>
+<span class="sd">        return &quot;0&quot;*12</span>
+<span class="sd">    hexvalue,sign = (float.hex(number),0) if number&gt;0 else (float.hex(number)[1:],1)</span>
+<span class="sd">    mantissa, exp = int(hexvalue[4:6],16), int(hexvalue[18:])</span>
+<span class="sd">    if exp&gt;3 or exp&lt;-4:</span>
+<span class="sd">        return &quot;0&quot;*12</span>
+<span class="sd">    return &quot;{}{:03b}{:08b}&quot;.format(sign,exp+4,mantissa)</span>
+<span class="sd">    </span>
+<span class="sd">def bin_to_float(binary):</span>
+<span class="sd">    mantissa,exp = binary[4:12],int(binary[1:4],2)</span>
+<span class="sd">    fraction = +sum([float(digit)*2.**(-(place+1)) for (place,digit) in enumerate(mantissa)])</span>
+<span class="sd">    number = (1.+fraction)*2.**(exp-4.)</span>
+<span class="sd">    signed_number = number if int(binary[0])==0 else -number</span>
+<span class="sd">    return signed_number</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Steve Merz.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
