@@ -20,7 +20,7 @@ def get_n_random_genes(numgenes,length):
     iterable = (neural.get_random_gene(length) for i in range(numgenes))
     return(np.fromiter(iterable,dtype=np.dtype('S270')))
 
-numgenes=400
+numgenes=100
 maxgenerations=1000
 mass=1
 net = neural.initialize_nn()

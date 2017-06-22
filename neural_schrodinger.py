@@ -146,6 +146,20 @@ def natural_selection(genes,net,num_survivors,points,mass):
     return((survivors,survivor_fitnesses))
 
 def breed_genes(gene1,gene2):
+    """Mates two genes using the uniform crossover algorithm.
+    
+    Parameters
+    ----------
+    gene1 : string
+        The string representing the first gene to mate
+    gene2 : string
+        The string representing the second gene to mate.
+
+    Returns
+    -------
+    newgene : string
+        The child of the two mated strings
+    """
     newgene=""
     for i in range(len(gene1)):
         if rnd.uniform(0,1)<0.5:
@@ -155,10 +169,38 @@ def breed_genes(gene1,gene2):
     return newgene
 
 def nn_array(net,array):
+    """Apply the neural network over an array.
+
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+        Neural network to apply over an array.
+    array : array of floats
+        Array of floats to activate the neural network over
+
+    Returns
+    -------
+    array of floats
+        The output of the neural network for each element of the array
+    """
     vector = [np.array(element) for element in array]
     return(map(net.activate,vector))
 
 def nn_first_derivative(net,x):
+    """The first derivative of a feedforward neural network with one hidden sigmoid layer.
+
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+        The neural network one wishes to get the first derivative of.
+    x : float
+        The location x where one wants the derivative
+
+    Returns
+    -------
+    output1_derivative, output2_derivative : (float,float)
+        The first derivative of the first and second output of the neural network.
+    """
     inweights = get_weights_by_layer(net,'in')
     hiddenweights = get_weights_by_layer(net,'hidden0')
     iterable1 = (hiddenweight*sigmoidPrime(x)*inweight**2 for (inweight,hiddenweight) in zip(inweights,hiddenweights[0:6]))
@@ -169,6 +211,20 @@ def nn_first_derivative(net,x):
 
 
 def nn_second_derivative(net,x):
+    """The second derivative of a feedforward neural network with one hidden sigmoid layer.
+
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+        The neural network one wishes to get the first derivative of.
+    x : float
+        The location x where one wants the derivative
+
+    Returns
+    -------
+    output1_derivative, output2_derivative : (float,float)
+        The second derivative of the first and second output of the neural network.
+    """
     inweights = get_weights_by_layer(net,'in')
     hiddenweights = get_weights_by_layer(net,'hidden0')
     iterable1 = (hiddenweight*sigmoidPrime(sigmoidPrime(x))*inweight**2 for (inweight,hiddenweight) in zip(inweights,hiddenweights[0:6]))
@@ -178,10 +234,33 @@ def nn_second_derivative(net,x):
     return(output1_deriv,output2_deriv)
 
 def eigenfunction(net,x):
+    """Converts the two outputs of the neural network to the value of the wavefunction at x.
+
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+        The neural network that represents the wavefunction.
+    x : float
+        The location at which one wants to evaluate the wavefunction.
+
+    Returns
+    -------
+    wavefunction : float
+        The value of the wavefunction at x
+    """
     (A,S)=net.activate(np.array([x]))
     return(A*sin(S))
 
 def eigenfunction_second_deriv(net,x):
+    """Calculates the second derivative of the wavefunction represented by net.
+
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+        The neural network representing the wavefunction.
+    x : float
+        The location at which one wishes to evaluate the wavefunction.
+    """
     (Aprime,Sprime) = nn_first_derivative(net,x)
     (Aprime2,Sprime2) = nn_second_derivative(net,x)
     (A,S) = net.activate(np.array([x]))
@@ -191,13 +270,64 @@ def eigenfunction_second_deriv(net,x):
     return(second_deriv)
 
 def hamiltonian(net,x,mass):
+    """Calculates the hamiltonian of a harmonic oscillator of reduced mass "mass" applied to the wavefunction represented by net.
+    
+    Parameters
+    ----------
+    net : PyBrain FeedForwardNetwork
+        The neural network that represents the wavefunction one wishes to apply the hamiltonian to.
+    x : float
+        The location at which one wishes to get the value of the hamiltonian
+    mass : float
+        The reduced mass of the harmonic oscillator
+
+    Returns
+    -------
+    float
+        The value of the hamiltonian applied to the wavefunction
+    """
     hamiltonian = -(1./(2.*mass))*eigenfunction_second_deriv(net,x)+0.5*(x**2)*eigenfunction(net,x)
     return(hamiltonian)
 
 def get_random_points(xmin,xmax,M):
+    """Gets n random points between xmin and xmax used for the random point evaluation method.
+
+    Parameters
+    ----------
+    xmin : float
+        Minimum value that the points can take.
+    xmax : float
+        Maximum value that the points can take.
+    M : int
+        The number of points to generate.
+    
+    Returns
+    -------
+    array of floats
+        An array of M random points.
+    """
     return(np.random.uniform(xmin,xmax,size=M))
 
 def gene_fitness(gene,net,points,mass):
+    """Calculates the fitness of the gene based on the difference between the energy and 
+    the hamiltonian applied to the wavefunction squared evaluated at the points specified by points.
+
+    Parameters
+    ----------
+    gene : string
+        The gene with which one wishes to get the fitness of.
+    net : PyBrain FeedForwardNetwork
+        The neural network used to represent the wavefunction.
+    points : array of floats
+        An array of random points with which one wishes to evaluate the hamiltonian.
+    mass : float
+        The reduced mass of the harmonic oscillator system.
+
+    Returns
+    -------
+    float
+        The fitness of the gene.
+    """
     weights,energy = gene_to_system(gene)
     net._setParameters(weights)
     energy_SSR_func = lambda x : (hamiltonian(net,x,mass)-energy*eigenfunction(net,x))**2
@@ -209,41 +339,45 @@ def gene_fitness(gene,net,points,mass):
 
 
 def bin_to_float(binary):
-    number = np.sum(np.fromiter((float(digit)*2.**(place) for digit,place in zip(binary,range(1,-7,-1))),dtype=float))
+    """Converts a binary number encoded with fixed point format.  Here the first digit is reserved for sign and the rest are binary places starting with 2^1 and decreasing.
+    Here we use ten bits to encode a number.
+
+    Parameters
+    ----------
+    binary : string
+        A string of ten digits representing the number in binary fixed point format.
+
+    Returns
+    -------
+    number : float
+        A float that corresponds to the fixed point binary format.
+    """
+    number = np.sum(np.fromiter((float(digit)*2.**(place) for digit,place in zip(binary[1:],range(1,-9,-1))),dtype=float))
     number = number if int(binary[0])==0 else -number
     return number
 
 def float_to_bin(number):
+    """Converts a floating point number to a ten bit fixed point format as specified in bin_to_float.
+
+    Parameters
+    ----------
+    number : float
+        The floating point number to convert.
+
+    Returns
+    -------
+    binary : string
+        A string representing the binary encoding of the floating point number in ten bit fixed point format.
+    """
     if number==0:
         return "0"*10
-    wrapped_value = number % 8
+    wrapped_value = abs(number) % 8
     binary = "0" if number >=0 else "1"
-    for i in range(1,-7,-1):
+    for i in range(1,-9,-1):
         if wrapped_value>=(2.**i):
             wrapped_value-=(2.**i)
             binary+="1"
         else:
             binary+="0"
     return binary
-    #hexvalue,sign = (float.hex(number),0) if number>0 else (float.hex(number)[1:],1)
-    #mantissa, exp = int(hexvalue[4:6],16), int(hexvalue[18:])
 
-
-"""
-def float_to_bin(number):
-    ""Modified from stackoverflow: https://stackoverflow.com/a/39378244""
-    if number==0:
-        return "0"*12
-    hexvalue,sign = (float.hex(number),0) if number>0 else (float.hex(number)[1:],1)
-    mantissa, exp = int(hexvalue[4:6],16), int(hexvalue[18:])
-    if exp>3 or exp<-4:
-        return "0"*12
-    return "{}{:03b}{:08b}".format(sign,exp+4,mantissa)
-    
-def bin_to_float(binary):
-    mantissa,exp = binary[4:12],int(binary[1:4],2)
-    fraction = +sum([float(digit)*2.**(-(place+1)) for (place,digit) in enumerate(mantissa)])
-    number = (1.+fraction)*2.**(exp-4.)
-    signed_number = number if int(binary[0])==0 else -number
-    return signed_number
-"""
